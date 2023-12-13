@@ -1,0 +1,27 @@
+{
+  "name": "mytest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "playwright install --with-deps && playwright test",
+    "dev": "ts-node --esm crawl.spec.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@playwright/test": "^1.40.1",
+    "rehype-parse": "^9.0.0",
+    "rehype-stringify": "^10.0.0",
+    "unified": "^11.0.4",
+    "unist-util-visit": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.5",
+    "dotenv": "^16.3.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.0.2"
+  }
+}
