@@ -34,9 +34,7 @@ jobs:
           path: ./dist
 
   deploy:
-    needs: build
-    if: github.ref == 'refs/heads/main'
-
+    needs: link_check_job
     permissions:
       pages: write
       id-token: write
