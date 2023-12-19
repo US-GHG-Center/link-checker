@@ -66,7 +66,7 @@ const generate_index_html = (url_errors) => {
 
 
     // Write the error response to index.html
-    fs.writeFileSync('index.html', errorResponse);
+    fs.writeFileSync('./dist/index.html', errorResponse);
 
     // Return the error status
     return { status: 500, message: 'Error 500 - Server Error. Check index.html for details.' };
@@ -80,7 +80,7 @@ const generate_index_html = (url_errors) => {
 
 
     // Write the OK response to index.html
-    fs.writeFileSync('index.html', okResponse);
+    fs.writeFileSync('./dist/index.html', okResponse);
 
     // Return the OK status
     return { status: 200, message: 'OK - Status 200. Check index.html for details.' };
