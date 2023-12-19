@@ -118,10 +118,31 @@ test('Crawl for bad URIs', async () => {
     const links = [...new Set(discoveredLinks)];
     discoveredLinks = [];
     for (let i = 0; i < links.length; i++) {
+      console.log(links[i], external_links)
+
+      if (links[i].indexOf("https://") == 0) {
+        external_links.push(links[i])
+
+      await fetch_url(links[i]).then((response) => {
+     
+            expect(response.status, `Expected a successful HTTP response for external URL ${links[i]}`).toBeLessThan(404);
+            console.log(`External URL ${links[i]}: ✅`);
+
+        })
+        .catch((error) => {
+            // Handle the error (e.g., log it) without rethrowing it
+            console.log(`External Failed ${links[i]}: ❌\nRaison: ${JSON.stringify(error)}`);
+            failed_urls.push(links[i]);
+          }
+    )
+    
+
+
+    }
       
       if (!crawled.includes(links[i]) && links[i].indexOf(baseUrl + startPath) == 0) {
 
-        fetch_url(links[i])
+        await fetch_url(links[i])
         .then((response) => {
             
                 expect(response.status, `Expected > 400 OK response for image ${links[i]}`).toBeLessThan(400);
@@ -207,28 +228,11 @@ function addUri(collection, uri) {
   if (uri.indexOf(baseUrl) == 0) {
     collection.push(uri.split('#')[0]);
   }
-  else {
-    if (uri.indexOf("https://") == 0 && !external_links.includes(uri)) {
-        external_links.push(uri)
-
-    fetch_url(uri).then((response) => {
-     
-            expect(response.status, `Expected a successful HTTP response for external URL ${uri}`).toBeLessThan(404);
-            console.log(`External URL ${uri}: ✅`);
-
-        })
-        .catch((error) => {
-            // Handle the error (e.g., log it) without rethrowing it
-            console.log(`External Failed ${uri}: ❌\nRaison: ${JSON.stringify(error)}`);
-            failed_urls.push(uri);
-          }
-    )
-    
-
-
-    }
-
+  if (uri.indexOf("https://") == 0 && !external_links.includes(uri)) {
+    external_links.push(uri)
+    collection.push(uri)
   }
+
 }
 
 function isString(s) {
