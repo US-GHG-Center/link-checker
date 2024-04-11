@@ -8,6 +8,8 @@ import dotenv from 'dotenv'
 import crypto from 'crypto';
 import { Agent } from "undici";
 
+import axios from 'axios';
+
 import fs from 'fs';
 
 const crawled = [];
@@ -21,6 +23,7 @@ let failed_urls = []
 dotenv.config({ path: '.env' })
 const baseUrl = process.env.baseurl;
 const startPath = process.env.subpath;
+const formBaseUrl = process.env.formbaseurl;
 
 
 const fetch_url = (url) => {
@@ -48,6 +51,21 @@ const index_response = (title, body) => {
   </body>
   </html>
 `;
+
+}
+
+const send_failure_notifictaion = (url_errors) => {
+  if (url_errors.length > 0) {
+    const feed_back = `:large_red_circle: ${url_errors.length} broken links detected\n- ${url_errors.join('\n- ')}`;
+    const params = `entry.1677587526=${feed_back}&pageHistory=0,5&partialResponse=[[[null,624417361,["General+comment+or+feedback"],0]],null,"-7930408979986934571",null,null,null,"link-checker@links.com",1]`;
+    axios.post(`${formBaseUrl}?${params}`)
+    .then((res) => {
+        console.log(`Status: ${res.status}`);
+    }).catch((err) => {
+        console.error(err);
+    });
+
+  }
 
 }
 
@@ -176,6 +194,7 @@ test('Crawl for bad URIs', async () => {
   console.log(`Failed URLS: ${JSON.stringify(failed_urls)}`)
 
   generate_index_html(failed_urls);
+  await send_failure_notifictaion(failed_urls);
 });
 
 function handleHtmlDocument(text) {
