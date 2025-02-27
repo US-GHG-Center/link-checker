@@ -11,6 +11,7 @@ import { Agent } from "undici";
 import axios from 'axios';
 
 import fs from 'fs';
+import * as cheerio from 'cheerio';
 
 const crawled = [];
 let discoveredLinks = [];
@@ -205,13 +206,19 @@ test('Crawl for bad URIs', async () => {
 );
 
 function handleHtmlDocument(text) {
-  //console.log(text);
+  const $ = cheerio.load(text);
 
+  // Find all button elements and replace them with p 
+  // This is a bandaid because the button for the banner US governement button doesn't cpmpile correctly
+  $('button').each(function () {
+    const content = $(this).html(); // Get inner content
+    $(this).replaceWith(`<p>${content}</p>`); // Replace <button> with <p>
+  });
   return unified()
     .use(rehypeParse)
     .use(rehypeStringify)
     .use(findUris)
-    .process(text)
+    .process($.html())
 }
 
 async function crawlImages() {
