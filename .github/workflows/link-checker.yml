@@ -23,10 +23,10 @@ jobs:
       image: mcr.microsoft.com/playwright:v1.40.1-focal
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js v20.x
+      - name: Use Node.js v22.x
         uses: actions/setup-node@v3
         with:
-          node-version: '20.x'
+          node-version: '22.x'
       - run: npm ci
       - run: npm test
       - name: Upload artifact
@@ -48,4 +48,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages 🚀
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
